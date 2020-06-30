@@ -1,0 +1,10 @@
+<resources>
+    <string name="button">button</string>
+    <string name="app_name">MyNotes</string>
+    <string name="Title">MyNotes</string>
+    <string name="plusIcon">+</string>
+    <string name="save">S</string>
+    <string name="notes">Notes...</string>
+    <string name="newtitle">Title...</string>
+    <string name="saveBtn">Save</string>
+</resources>
