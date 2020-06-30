@@ -2,6 +2,7 @@ package com.ssharworks.app.mynotes;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class NewNote extends AppCompatActivity {
 
     public static final String EXTRA_TITLE_TEXT = "com.ssharworks.app.mynotes.note.title";
@@ -25,6 +30,9 @@ public class NewNote extends AppCompatActivity {
     private EditText noteContents;
     private Button saveButton;
 
+    private String final_title;
+    private String final_content;
+
     private static final String TAG = "NewNoteTag";
 
     @Override
@@ -33,8 +41,7 @@ public class NewNote extends AppCompatActivity {
         setContentView(R.layout.activity_new_note);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
+        
         newTitleName = (EditText) findViewById(R.id.newTitleName);
         noteContents = (EditText) findViewById(R.id.noteContents);
 
@@ -44,10 +51,10 @@ public class NewNote extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String final_title = newTitleName.getText().toString();
-                noteContents.getText().toString();
+                final_title = newTitleName.getText().toString();
+                final_content = noteContents.getText().toString();
 
-                Log.d(TAG, "final_title is " + final_title);
+                saveContent();
 
                 Intent intent = new Intent(NewNote.this, MainActivity.class);
                 intent.putExtra(EXTRA_TITLE_TEXT, final_title);
@@ -68,6 +75,22 @@ public class NewNote extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+    }
+
+    private void saveContent() {
+        try {
+            Log.d(TAG, "Trying to write file");
+            FileOutputStream fileOutputStream = getApplicationContext().openFileOutput(final_title, Context.MODE_PRIVATE);
+            fileOutputStream.write(final_content.getBytes());
+            Log.d(TAG, "writing completed");
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "file not found exception");
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d(TAG, "io exception");
+            e.printStackTrace();
+        }
     }
 
 }
